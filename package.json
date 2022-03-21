@@ -10,12 +10,15 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-three/fiber": "^8.0.0-beta.3",
     "expo": "~44.0.0",
+    "expo-gl": "^11.1.2",
     "expo-status-bar": "~1.2.0",
-    "react": "17.0.1",
+    "react": "^18.0.0-rc.2",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
-    "react-native-web": "0.17.1"
+    "react-native-web": "0.17.1",
+    "three": "^0.138.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
