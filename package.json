@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@react-three/fiber": "^8.0.0-beta.3",
+    "@types/react": "^17.0.41",
+    "@types/react-native": "^0.67.3",
     "expo": "~44.0.0",
     "expo-gl": "^11.1.2",
     "expo-status-bar": "~1.2.0",
@@ -21,7 +23,9 @@
     "three": "^0.138.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.16.11",
+    "typescript": "~4.3.5"
   },
   "private": true
 }

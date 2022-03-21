@@ -1,16 +1,20 @@
-import React, {useEffect, useRef, useState} from 'react'
-import {Canvas, useFrame, useThree} from '@react-three/fiber/native'
+import React, {MutableRefObject, useEffect, useRef, useState} from 'react'
+import {Canvas, MeshProps, useFrame, useThree} from '@react-three/fiber/native'
 import {Text, View} from "react-native";
 
-function Box(props) {
+function Box(props: MeshProps) {
   const mesh = useRef(null)
   const [hovered, setHover] = useState(false)
   const [active, setActive] = useState(false)
   const [tumble, setTumble] = useState(0.02);
 
   useFrame((state, delta) => {
-    mesh.current.rotation.x += tumble;
-    mesh.current.rotation.y += tumble;
+    if(mesh != null) {
+      // @ts-ignore
+      mesh.current.rotation.x += tumble;
+      // @ts-ignore
+      mesh.current.rotation.y += tumble;
+    }
   })
 
   return (
@@ -30,7 +34,7 @@ function Box(props) {
   )
 }
 
-function Circle(props) {
+function Circle(props: MeshProps) {
   const mesh = useRef(null)
   const [hovered, setHover] = useState(false)
   const [active, setActive] = useState(false)
@@ -38,23 +42,29 @@ function Circle(props) {
   const [deltaX, setDeltaX] = useState(0.1);
   const [deltaY, setDeltaY] = useState(0.15);
 
-  const bounds = {left: -2, right: 2, top: -2, bottom: 2};
+  const bounds = {left: -4, right: 4, top: -2, bottom: 2};
 
   //useFrame((state, delta) => {mesh.current.rotation.x += tumble; mesh.current.rotation.y += tumble; })
   useFrame((state, delta) => {
-    if(mesh.current.position.x < bounds.left)  {
+// @ts-ignore
+    if (mesh.current.position.x < bounds.left) {
       setDeltaX(0.24);
     }
-    if(mesh.current.position.x > bounds.right)  {
+// @ts-ignore
+    if (mesh.current.position.x > bounds.right) {
       setDeltaX(-0.23);
     }
-    if(mesh.current.position.y < bounds.top)  {
+// @ts-ignore
+    if (mesh.current.position.y < bounds.top) {
       setDeltaY(0.22);
     }
-    if(mesh.current.position.y > bounds.bottom)  {
+// @ts-ignore
+    if (mesh.current.position.y > bounds.bottom) {
       setDeltaY(-0.21);
     }
+// @ts-ignore
     mesh.current.position.x += deltaX;
+// @ts-ignore
     mesh.current.position.y += deltaY;
   });
 
@@ -76,32 +86,39 @@ function Circle(props) {
   )
 }
 
-function Torus(props) {
+function Torus(props: MeshProps) {
   const mesh = useRef(null)
   const [hovered, setHover] = useState(false)
   const [active, setActive] = useState(false)
   const [tumble, setTumble] = useState(0.0);
-  const [deltaX, setDeltaX] = useState(0.1);
-  const [deltaY, setDeltaY] = useState(0.15);
+  const [deltaX, setDeltaX] = useState(1);
+  const [deltaY, setDeltaY] = useState(1);
 
-  const bounds = {left: -2, right: 2, top: -2, bottom: 2};
+  const bounds = {left: -5, right: 5, top: -2, bottom: 2};
 
   //useFrame((state, delta) => {mesh.current.rotation.x += tumble; mesh.current.rotation.y += tumble; })
   useFrame((state, delta) => {
+    //console.log(state, delta);
+// @ts-ignore
     if(mesh.current.position.x < bounds.left)  {
-      setDeltaX(0.04);
+      setDeltaX(1);
     }
+// @ts-ignore
     if(mesh.current.position.x > bounds.right)  {
-      setDeltaX(-0.03);
+      setDeltaX(-1);
     }
+// @ts-ignore
     if(mesh.current.position.y < bounds.top)  {
-      setDeltaY(0.02);
+      setDeltaY(1);
     }
+// @ts-ignore
     if(mesh.current.position.y > bounds.bottom)  {
-      setDeltaY(-0.01);
+      setDeltaY(-1);
     }
-    mesh.current.position.x += deltaX;
-    mesh.current.position.y += deltaY;
+// @ts-ignore
+    mesh.current.position.x += deltaX * delta * 1;
+// @ts-ignore
+    mesh.current.position.y += deltaY * delta * 1;
   });
 
   return (
@@ -113,28 +130,17 @@ function Torus(props) {
         setActive(!active);
         setTumble(0.0);
       }}
-      /*      onPointerOver={(event) => setHover(true)}
-            onPointerOut={(event) => setHover(false)}*/>
-      <torusGeometry args={[2, 0.2, 8, 24]}/>
-      <meshStandardMaterial color={hovered ? 'blue' : 'grey'}/>
+            onPointerOver={(event) => setHover(true)}
+            onPointerOut={(event) => setHover(false)}>
+      <torusGeometry args={[2, .2, 16, 48]}/>
+      <meshStandardMaterial color={hovered ? 'blue' : 'teal'}/>
     </mesh>
   )
 }
 
-function Camera(props) {
-  const ref = useRef()
-  const { setDefaultCamera } = useThree()
-  // Make the camera known to the system
-  useEffect(() => void setDefaultCamera(ref.current), [])
-  // Update it every frame
-  useFrame(() => ref.current.updateMatrixWorld())
-  return <perspectiveCamera ref={ref} {...props} />
-}
-
 export default function App() {
   return (
-      <Canvas >
-        <Camera position={[0, 0, 10]} />
+      <Canvas orthographic camera={{ zoom: 100, position: [0, 0, 100] }}>
         <ambientLight/>
         {/*<pointLight position={[10, 10, 10]}/>*/}
         <directionalLight position={[10, 10, 10]}/>
@@ -143,11 +149,11 @@ export default function App() {
         <Box position={[-1.2, 0, 0]}/>
         <Box position={[1.2, 0, 0]}/>
         <Box position={[1.2, 1, 0]}/>
-        <Box position={[1.2, 1, 0]}/>
-        <Box position={[1.2, 0, 1]}/>
-        <Box position={[1.2, 0, 1]}/>
-        <Box position={[1.2, 0, 2]}/>
-        <Box position={[1.2, 0, 2]}/>
+        <Box position={[-1.4, 1, 0]}/>
+        <Box position={[-0.8, 0, 1]}/>
+        <Box position={[1.8, 0, 1]}/>
+        <Box position={[1.7, 0, 2]}/>
+        <Box position={[1.6, 0, 2]}/>
       </Canvas>
   );
 }
